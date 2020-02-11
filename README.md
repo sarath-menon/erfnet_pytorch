@@ -13,3 +13,9 @@ python run_on_video.py
 ```
 python run_on_webcam.py 
 ```
+
+## Dependencies
+
+```
+python install visdom
+```
