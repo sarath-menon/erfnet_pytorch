@@ -83,8 +83,8 @@ def main(args):
     model = ERFNet(NUM_CLASSES)
 
     model = torch.nn.DataParallel(model)
-    # if (not args.cpu):
-    #     model = model.cuda()
+    if (not args.cpu):
+        model = model.cuda()
 
     #model.load_state_dict(torch.load(args.state))
     #model.load_state_dict(torch.load(weightspath)) #not working if missing key
@@ -132,8 +132,8 @@ def main(args):
 
 
         # Our operations on the frame come here
-        # if (not args.cpu):
-        #     images = images.cuda()
+        if (not args.cpu):
+            images = images.cuda()
 
         inputs = Variable(images)
         with torch.no_grad():
