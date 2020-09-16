@@ -8,7 +8,35 @@ import torch
 
 from PIL import Image
 
-def colormap_cityscapes(n):
+def colormap_cityscapes_binary(n):                 # Binary segmentation
+    cmap=np.zeros([n, 3]).astype(np.uint8)
+    cmap[0,:] = np.array([255,255,255])
+    cmap[1,:] = np.array([0,0,0])
+    cmap[2,:] = np.array([0,0,0])
+    cmap[3,:] = np.array([0,0,0])
+    cmap[4,:] = np.array([0,0,0])
+    cmap[5,:] = np.array([0,0,0])
+
+    cmap[6,:] = np.array([0,0,0])
+    cmap[7,:] = np.array([0,0,0])
+    cmap[8,:] = np.array([0,0,0])
+    cmap[9,:] = np.array([0,0,0])
+    cmap[10,:] = np.array([0,0,0])
+
+    cmap[11,:] = np.array([0,0,0])
+    cmap[12,:] = np.array([0,0,0])
+    cmap[13,:] = np.array([0,0,0])
+    cmap[14,:] = np.array([0,0,0])
+    cmap[15,:] = np.array([0,0,0])
+
+    cmap[16,:] = np.array([0,0,0])
+    cmap[17,:] = np.array([0,0,0])
+    cmap[18,:] = np.array([0,0,0])
+    cmap[19,:] = np.array([0,0,0])
+
+    return cmap
+
+def colormap_cityscapes(n):             # Multiclass Semantic segmentation
     cmap=np.zeros([n, 3]).astype(np.uint8)
     cmap[0,:] = np.array([128, 64,128])
     cmap[1,:] = np.array([244, 35,232])
@@ -33,7 +61,7 @@ def colormap_cityscapes(n):
     cmap[17,:] = np.array([  0,  0,230])
     cmap[18,:] = np.array([ 119, 11, 32])
     cmap[19,:] = np.array([ 0,  0,  0])
-    
+
     return cmap
 
 
@@ -75,6 +103,29 @@ class Colorize:
     def __init__(self, n=22):
         #self.cmap = colormap(256)
         self.cmap = colormap_cityscapes(256)
+        self.cmap[n] = self.cmap[-1]
+        self.cmap = torch.from_numpy(self.cmap[:n])
+
+    def __call__(self, gray_image):
+        size = gray_image.size()
+        color_image = torch.ByteTensor(3, size[1], size[2]).fill_(0)
+
+        #for label in range(1, len(self.cmap)):
+        for label in range(0, len(self.cmap)):
+            mask = gray_image[0] == label
+
+            color_image[0][mask] = self.cmap[label][0]
+            color_image[1][mask] = self.cmap[label][1]
+            color_image[2][mask] = self.cmap[label][2]
+
+        return color_image
+
+
+class Colorize_binary:
+
+    def __init__(self, n=22):
+        #self.cmap = colormap(256)
+        self.cmap = colormap_cityscapes_binary(256)
         self.cmap[n] = self.cmap[-1]
         self.cmap = torch.from_numpy(self.cmap[:n])
 

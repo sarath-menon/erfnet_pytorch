@@ -18,7 +18,7 @@ from torchvision.transforms import ToTensor, ToPILImage
 
 from dataset import cityscapes
 from erfnet import ERFNet
-from transform import Relabel, ToLabel, Colorize
+from transform import Relabel, ToLabel, Colorize_binary
 
 import visdom
 
@@ -142,7 +142,7 @@ def main(args):
 
         label = outputs[0].max(0)[1].byte().cpu().data
         #label_cityscapes = cityscapes_trainIds2labelIds(label.unsqueeze(0))
-        label_color = Colorize()(label.unsqueeze(0))
+        label_color = Colorize_binary()(label.unsqueeze(0))
         frame = label_color.numpy().transpose(1, 2, 0)
 
         # label_save = ToPILImage()(label_color)
